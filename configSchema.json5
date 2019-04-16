@@ -1,0 +1,93 @@
+{
+  type: 'object',
+  properties: {
+    IFTTT: {
+      type: 'object',
+      properties: {
+        OFF_EVENT: {
+          description:
+            'The IFTTT webhook trigger event name to turn heater off',
+          type: 'string',
+          minLength: 1,
+        },
+        ON_EVENT: {
+          description: 'The IFTTT webhook trigger event name to turn heater on',
+          type: 'string',
+          minLength: 1,
+        },
+        WEBHOOK_KEY: {
+          description: 'The IFTTT Webhooks service key',
+          type: 'string',
+          minLength: 1,
+        },
+      },
+      required: ['OFF_EVENT', 'ON_EVENT', 'WEBHOOK_KEY'],
+    },
+    NEST: {
+      type: 'object',
+      properties: {
+        EMAIL: {
+          description: 'The email address associated with your Nest account',
+          type: 'string',
+          format: 'email',
+        },
+        PASSWORD: {
+          description: 'The Nest account password',
+          type: 'string',
+          minLength: 1,
+        },
+        SENSOR_SERIAL_NO: {
+          description:
+            'The serial number of the Nest temperature sensor to monitor',
+          type: 'string',
+          minLength: 1,
+        },
+      },
+      required: ['EMAIL', 'PASSWORD', 'SENSOR_SERIAL_NO'],
+    },
+    TEMP: {
+      type: 'object',
+      properties: {
+        OFF: {
+          description:
+            'The temperature at which the heater should be turned off (°F)',
+          type: 'number',
+          minimum: 0,
+          maximum: 100,
+        },
+        ON: {
+          description:
+            'The temperature at which the heater should be turned on (°F)',
+          type: 'number',
+          minimum: 0,
+          maximum: 100,
+        },
+      },
+      required: ['OFF', 'ON'],
+    },
+    TIME: {
+      type: 'object',
+      default: {},
+      properties: {
+        MAX_EXECUTION: {
+          description:
+            'The maximum amount of time the program will run before turning off heater and terminating (ms)',
+          default: 14400000, // 4 hours
+          type: 'number',
+          minimum: 0,
+          maximum: 9007199254740991, // Number.MAX_SAFE_INTEGER
+        },
+        POLL_INTERVAL: {
+          description:
+            'The delay between requests for the Nest sensor temperature (ms)',
+          default: 300000, // 5 minutes
+          type: 'number',
+          minimum: 0,
+          maximum: 9007199254740991, // Number.MAX_SAFE_INTEGER
+        },
+      },
+      required: ['MAX_EXECUTION', 'POLL_INTERVAL'],
+    },
+  },
+  required: ['IFTTT', 'NEST', 'TEMP', 'TIME'],
+}
