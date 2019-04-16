@@ -85,3 +85,5 @@ Stop the program at any time by pressing <kbd>Ctrl</kbd><kbd>C</kbd> in the term
 If an error occurs, the program will print the error details and crash. You may need to manually turn off your heater.
 
 The program will automatically exit after `TIME.MAX_EXECUTION` and turn off the heater.
+
+**Note:** Long-running Node.js processes will not prevent your computer from sleeping. While your computer is asleep, temperature polling is paused. Depending on the duration of time elapsed since the process started, after waking the computer, the process may exit after the next polling interval and turn off the heater.
