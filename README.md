@@ -10,7 +10,7 @@
 * Configured temperature sensors for the Nest thermostat
 * Configured IFTTT-compatible smart outlet like [this one](https://www.amazon.com/gp/product/B07CVFD2KC/)
 * Space heater plugged into the smart outlet
-* A free [IFTTT](https://ifttt.com/) account
+* [IFTTT](https://ifttt.com/) account
 
 ## Setup
 
