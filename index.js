@@ -1,64 +1,42 @@
 const axios = require('axios')
 
-const {
-  fahrenheit,
-  format,
-  loadConfig,
-  log,
-  sleep
-} = require('./utils')
+const { fahrenheit, format, loadConfig, log, sleep } = require('./utils')
 
 const {
-  IFTTT: {
-    OFF_EVENT,
-    ON_EVENT,
-    WEBHOOK_KEY
-  },
-  NEST: {
-    EMAIL,
-    PASSWORD,
-    SENSOR_SERIAL_NO
-  },
-  TEMP: {
-    OFF: OFF_TEMP,
-    ON: ON_TEMP
-  },
-  TIME: {
-    MAX_EXECUTION,
-    POLL_INTERVAL
-  }
+  IFTTT: { OFF_EVENT, ON_EVENT, WEBHOOK_KEY },
+  NEST: { EMAIL, PASSWORD, SENSOR_SERIAL_NO },
+  TEMP: { OFF: OFF_TEMP, ON: ON_TEMP },
+  TIME: { MAX_EXECUTION, POLL_INTERVAL },
 } = loadConfig()
 
 const getAuthInfo = async () => {
   const { data } = await axios.post('https://home.nest.com/session', {
     email: EMAIL,
-    password: PASSWORD
+    password: PASSWORD,
   })
 
   return {
     authToken: data.access_token,
-    userId: data.userid
+    userId: data.userid,
   }
 }
 
-const getBucketData = async ({ authToken, userId }) => (
+const getBucketData = async ({ authToken, userId }) =>
   (await axios.post(
     `https://home.nest.com/api/0.1/user/${userId}/app_launch`,
     {
       known_bucket_types: ['kryptonite'],
-      known_bucket_versions: []
+      known_bucket_versions: [],
     },
     {
       headers: {
-        authorization: `Basic ${authToken}`
-      }
+        authorization: `Basic ${authToken}`,
+      },
     }
   )).data.updated_buckets
-)
 
-const getRoomBucket = (buckets, serialNo) => buckets.find(bucket => (
-  bucket.value.serial_number === serialNo
-))
+const getRoomBucket = (buckets, serialNo) =>
+  buckets.find(bucket => bucket.value.serial_number === serialNo)
 
 const switchHeater = async on => {
   const event = on ? ON_EVENT : OFF_EVENT
@@ -97,8 +75,7 @@ const run = async () => {
   await switchHeater(false)
 }
 
-run()
-  .catch(err => {
-    console.error(err)
-    process.exit(1)
-  })
+run().catch(err => {
+  console.error(err)
+  process.exit(1)
+})

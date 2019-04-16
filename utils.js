@@ -11,7 +11,7 @@ const loadFile = (() => {
     json: JSON.parse,
     JSON: JSON.parse,
     json5: json5Parse,
-    JSON5: json5Parse
+    JSON5: json5Parse,
   }
 
   return basePath => {
@@ -22,15 +22,17 @@ const loadFile = (() => {
       const result = Object.keys(FILE_PARSERS)
         .map(extension => ({
           extension,
-          filePath: `${basePath}.${extension}`
+          filePath: `${basePath}.${extension}`,
         }))
         .find(({ filePath }) => fs.existsSync(filePath))
 
       if (!result) {
-        throw new Error(`Could not find ${basePath}.{${Object.keys(FILE_PARSERS).join(', ')}}`)
+        throw new Error(
+          `Could not find ${basePath}.{${Object.keys(FILE_PARSERS).join(', ')}}`
+        )
       }
 
-      ({ extension, filePath } = result)
+      ;({ extension, filePath } = result)
     } else {
       filePath = basePath
       if (!FILE_PARSERS[extension]) {
@@ -46,7 +48,9 @@ const loadFile = (() => {
 
 const conformConfig = (() => {
   const ajv = new Ajv({ allErrors: true, useDefaults: true })
-  const validate = ajv.compile(loadFile(path.join(__dirname, 'configSchema.json5')))
+  const validate = ajv.compile(
+    loadFile(path.join(__dirname, 'configSchema.json5'))
+  )
 
   return config => {
     validate(config)
@@ -57,7 +61,7 @@ const conformConfig = (() => {
   }
 })()
 
-exports.fahrenheit = celsius => ((9 / 5) * celsius) + 32
+exports.fahrenheit = celsius => (9 / 5) * celsius + 32
 
 exports.format = n => {
   const rounded = String(Math.round(n * 10) / 10)
@@ -74,10 +78,11 @@ exports.log = (() => {
 
   return {
     event: message => console.log(`${stamp()} ${chalk.green(message)}`),
-    info: message => console.log(chalk.grey(`${stamp()} ${message}`))
+    info: message => console.log(chalk.grey(`${stamp()} ${message}`)),
   }
 })()
 
-exports.sleep = time => new Promise(resolve => {
-  setTimeout(resolve, time)
-})
+exports.sleep = time =>
+  new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
