@@ -52,23 +52,23 @@
     ```
 
     ```json5
-   {
-     NEST: {
-       EMAIL: 'foo@bar.baz',
-       PASSWORD: 'Foo42BarBaz!',
-       SENSOR_SERIAL_NO: '00AA00AA000000A0'
-     },
-     IFTTT: {
-       WEBHOOK_KEY: 'aaAaAAA0aa_Aa0aAA0aA0A',
-       ON_EVENT: 'room_too_cold',
-       OFF_EVENT: 'room_too_warm'
-     },
-     TEMP: {
-       ON: 63,
-       OFF: 66
-     }
-   }
-   ```
+    {
+      NEST: {
+        EMAIL: 'foo@bar.baz',
+        PASSWORD: 'Foo42BarBaz!',
+        SENSOR_SERIAL_NO: '00AA00AA000000A0'
+      },
+      IFTTT: {
+        WEBHOOK_KEY: 'aaAaAAA0aa_Aa0aAA0aA0A',
+        ON_EVENT: 'room_too_cold',
+        OFF_EVENT: 'room_too_warm'
+      },
+      TEMP: {
+        ON: 63,
+        OFF: 66
+      }
+    }
+    ```
 
 ## Running
 
