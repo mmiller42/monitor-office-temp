@@ -24,21 +24,20 @@ const loadFile = (() => {
   }, [])
 
   return basePath => {
-    let type = path.extname(basePath).substr(1).toLowerCase()
+    let type = path
+      .extname(basePath)
+      .substr(1)
+      .toLowerCase()
     let filePath
 
     if (type === '') {
-      const result = EXTENSIONS
-        .map(extension => ({
-          type: extension.toLowerCase(),
-          filePath: `${basePath}.${extension}`,
-        }))
-        .find(({ filePath }) => fs.existsSync(filePath))
+      const result = EXTENSIONS.map(extension => ({
+        type: extension.toLowerCase(),
+        filePath: `${basePath}.${extension}`,
+      })).find(({ filePath }) => fs.existsSync(filePath))
 
       if (!result) {
-        throw new Error(
-          `Could not find ${basePath}.{${EXTENSIONS.join(',')}}`
-        )
+        throw new Error(`Could not find ${basePath}.{${EXTENSIONS.join(',')}}`)
       }
 
       ;({ type, filePath } = result)
@@ -55,7 +54,9 @@ const loadFile = (() => {
     try {
       return parse(content)
     } catch (err) {
-      console.error(`Failed to parse ${filePath} config as ${type.toUpperCase()}.`)
+      console.error(
+        `Failed to parse ${filePath} config as ${type.toUpperCase()}.`
+      )
       throw err
     }
   }
