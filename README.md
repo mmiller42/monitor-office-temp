@@ -1,6 +1,6 @@
-# monitor-office-temp
+# nest-sensor-heater-control
 
-> Uses Nest temperature sensors to programmatically control a space heater to maintain a comfortable temperature in a specific room, using IFTTT webhook triggers to control a smart outlet.
+> Polls a Nest temperature sensor and programmatically controls a space heater to maintain a comfortable temperature in a specific room, using IFTTT webhook triggers that toggle a smart outlet.
 
 ⚠️ Integrates an undocumented Nest API which requires a password to authenticate. 2FA must also be disabled.
 

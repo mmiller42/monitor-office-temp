@@ -1,13 +1,13 @@
 {
-  "name": "monitor-office-temp",
+  "name": "nest-sensor-heater-control",
   "version": "0.0.0",
-  "description": "Monitors the temperature of my home office via Nest",
+  "description": "Polls a Nest temperature sensor and programmatically controls a space heater to maintain a comfortable temperature in a specific room, using IFTTT webhook triggers that toggle a smart outlet.",
   "scripts": {
     "format": "yarn prettier --write *.js",
     "start": "node index.js"
   },
   "author": "Matt Miller <me@mmiller.me>",
-  "license": "UNLICENSED",
+  "license": "0BSD",
   "private": true,
   "dependencies": {
     "ajv": "^6.10.0",
