@@ -14,40 +14,50 @@ const loadFile = (() => {
 
   const FILE_PARSERS = {
     json: JSON.parse,
-    JSON: JSON.parse,
     json5: json5Parse,
-    JSON5: json5Parse,
   }
 
+  const EXTENSIONS = Object.keys(FILE_PARSERS).reduce((extensions, type) => {
+    extensions.push(type)
+    extensions.push(type.toUpperCase())
+    return extensions
+  }, [])
+
   return basePath => {
-    let extension = path.extname(basePath).substr(1)
+    let type = path.extname(basePath).substr(1).toLowerCase()
     let filePath
 
-    if (extension === '') {
-      const result = Object.keys(FILE_PARSERS)
+    if (type === '') {
+      const result = EXTENSIONS
         .map(extension => ({
-          extension,
+          type: extension.toLowerCase(),
           filePath: `${basePath}.${extension}`,
         }))
         .find(({ filePath }) => fs.existsSync(filePath))
 
       if (!result) {
         throw new Error(
-          `Could not find ${basePath}.{${Object.keys(FILE_PARSERS).join(', ')}}`
+          `Could not find ${basePath}.{${EXTENSIONS.join(',')}}`
         )
       }
 
-      ;({ extension, filePath } = result)
+      ;({ type, filePath } = result)
     } else {
       filePath = basePath
-      if (!FILE_PARSERS[extension]) {
-        throw new Error(`Unrecognized file extension ${extension}`)
+      if (!FILE_PARSERS[type]) {
+        throw new Error(`Unrecognized file extension ${type}`)
       }
     }
 
     const content = fs.readFileSync(filePath, 'utf8')
-    const parse = FILE_PARSERS[extension]
-    return parse(content)
+    const parse = FILE_PARSERS[type]
+
+    try {
+      return parse(content)
+    } catch (err) {
+      console.error(`Failed to parse ${filePath} config as ${type.toUpperCase()}.`)
+      throw err
+    }
   }
 })()
 
