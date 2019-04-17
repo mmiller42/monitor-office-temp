@@ -65,9 +65,11 @@ const conformConfig = (() => {
 
   return config => {
     if (!validate(config)) {
-      throw new Error(betterAjvErrors(schema, config, validate.errors, {
-        indent: 2,
-      }))
+      throw new Error(
+        betterAjvErrors(schema, config, validate.errors, {
+          indent: 2,
+        })
+      )
     }
     return config
   }
