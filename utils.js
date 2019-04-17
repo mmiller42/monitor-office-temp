@@ -1,12 +1,17 @@
 const Ajv = require('ajv')
+const betterAjvErrors = require('better-ajv-errors')
 const chalk = require('chalk')
+const deepMapKeys = require('deep-map-keys')
 const json5 = require('json5')
 const fs = require('fs')
+const { merge, snakeCase } = require('lodash')
+const minimist = require('minimist')
 const path = require('path')
-
-const json5Parse = json5.parse.bind(json5)
+const PrettyError = require('pretty-error')
 
 const loadFile = (() => {
+  const json5Parse = json5.parse.bind(json5)
+
   const FILE_PARSERS = {
     json: JSON.parse,
     JSON: JSON.parse,
@@ -47,15 +52,22 @@ const loadFile = (() => {
 })()
 
 const conformConfig = (() => {
-  const ajv = new Ajv({ allErrors: true, useDefaults: true })
-  const validate = ajv.compile(
-    loadFile(path.join(__dirname, 'configSchema.json5'))
-  )
+  const ajv = new Ajv({
+    allErrors: true,
+    coerceTypes: true,
+    jsonPointers: true,
+    removeAdditional: true,
+    useDefaults: true,
+  })
+
+  const schema = loadFile(path.join(__dirname, 'configSchema.json5'))
+  const validate = ajv.compile(schema)
 
   return config => {
-    validate(config)
-    if (validate.errors) {
-      throw new Error(ajv.errorsText(validate.errors))
+    if (!validate(config)) {
+      throw new Error(betterAjvErrors(schema, config, validate.errors, {
+        indent: 2,
+      }))
     }
     return config
   }
@@ -69,14 +81,30 @@ exports.format = n => {
 }
 
 exports.loadConfig = () => {
-  const config = loadFile(path.join(__dirname, 'config'))
-  return conformConfig(config)
+  const normalizeConfigKeys = config =>
+    deepMapKeys(config, key => snakeCase(key).toUpperCase())
+
+  const fileConfig = loadFile(path.join(__dirname, 'config'))
+  const [, , ...cliArgs] = process.argv
+  const overrides = minimist(cliArgs)
+
+  return conformConfig(
+    merge({}, normalizeConfigKeys(fileConfig), normalizeConfigKeys(overrides))
+  )
 }
 
 exports.log = (() => {
+  const prettyError = new PrettyError()
   const stamp = () => `[${new Date().toLocaleTimeString()}]`
 
   return {
+    error: message => {
+      if (typeof message === 'string') {
+        console.error(`${stamp()} ${chalk.red(message)}`)
+      } else {
+        console.error(prettyError.render(message))
+      }
+    },
     event: message => console.log(`${stamp()} ${chalk.green(message)}`),
     info: message => console.log(chalk.grey(`${stamp()} ${message}`)),
   }

@@ -63,12 +63,39 @@
         ON_EVENT: 'room_too_cold',
         OFF_EVENT: 'room_too_warm',
       },
+      STAY_AWAKE: true,
       TEMP: {
         ON: 63,
         OFF: 66,
       },
     }
     ```
+
+## Configuration
+
+Config values are read from `config.json` or `config.json5` in the repository directory. This file must exist.
+
+The property names may be specified in camelCase (e.g. `ifttt.webhookKey`, `stayAwake`), snake_case (e.g. `ifttt.webhook_key`, `stay_awake`), or UPPER_SNAKE_CASE (e.g. `IFTT.WEBHOOK_KEY`, `STAY_AWAKE`).
+
+Config properties can be selectively overridden with command line arguments:
+
+```sh
+yarn start --ifttt.webhookKey=foobar --stayAwake
+```
+
+|Property|Type|Description|Default|
+|:-------|:---|:----------|:------|
+|`IFTTT.OFF_EVENT`|string|The IFTTT webhook trigger event name to turn heater off|*Required*|
+|`IFTTT.ON_EVENT`|string|The IFTTT webhook trigger event name to turn heater on|*Required*|
+|`IFTTT.WEBHOOK_KEY`|string|The IFTTT Webhooks service key|*Required*|
+|`NEST.EMAIL`|string|The email address associated with your Nest account|*Required*|
+|`NEST.PASSWORD`|string|The Nest account password|*Required*|
+|`NEST.SENSOR_SERIAL_NO`|string|The serial number of the Nest temperature sensor to monitor|*Required*|
+|`STAY_AWAKE`|boolean|Prevent the computer from sleeping so that timer does not pause|`false`|
+|`TEMP.OFF`|number|The temperature at which the heater should be turned off (°F)|*Required*|
+|`TEMP.ON`|number|The temperature at which the heater should be turned on (°F)|*Required*|
+|`TIME.MAX_EXECUTION`|number|The maximum amount of time the program will run before turning off heater and terminating (ms)|`14400000` (4 hours)|
+|`TIME.POLL_INTERVAL`|number|The delay between requests for the Nest sensor temperature (ms)|`300000` (5 minutes)|
 
 ## Running
 
@@ -80,9 +107,9 @@ yarn start
 
 This will cycle your heater on and off based on your temperature triggers (`TEMP.ON` and `TEMP.OFF`).
 
-Stop the program at any time by pressing <kbd>Ctrl</kbd><kbd>C</kbd> in the terminal window.
+Stop the program at any time by pressing <kbd>Ctrl</kbd><kbd>C</kbd> in the terminal window. It will attempt to turn off the heater before exiting.
 
-If an error occurs, the program will print the error details and crash. You may need to manually turn off your heater.
+If an error occurs, the program will print the error details and crash. It will attempt to turn off the heater before exiting.
 
 The program will automatically exit after `TIME.MAX_EXECUTION` and turn off the heater.
 

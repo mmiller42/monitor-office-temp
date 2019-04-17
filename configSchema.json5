@@ -45,6 +45,11 @@
       },
       required: ['EMAIL', 'PASSWORD', 'SENSOR_SERIAL_NO'],
     },
+    STAY_AWAKE: {
+      description: 'Prevent the computer from sleeping so that timer does not pause',
+      type: 'boolean',
+      default: false,
+    },
     TEMP: {
       type: 'object',
       properties: {
