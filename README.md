@@ -4,13 +4,14 @@
 
 ⚠️ Integrates an undocumented Nest API which requires a password to authenticate. 2FA must also be disabled.
 
-## Prerequisites
+## Requirements
 
 * Configured Nest thermostat and account at [Nest](https://home.nest.com/)
 * Configured temperature sensors for the Nest thermostat
 * Configured IFTTT-compatible smart outlet like [this one](https://www.amazon.com/gp/product/B07CVFD2KC/)
 * Space heater plugged into the smart outlet
 * [IFTTT](https://ifttt.com/) account
+* [Git](https://git-scm.com/), [Node.js](https://nodejs.org/), and [Yarn](https://yarnpkg.com/)
 
 ## Setup
 
@@ -36,17 +37,20 @@
         1. Find the *URL* shown on the page. It should begin with `https://maker.ifttt.com/use/`. Your webhook key is the sequence of characters after the `use/` in this URL.
 
 1. Clone this repository.
+
     ```sh
     git clone https://github.com/mmiller42/monitor-office-temp.git
     cd monitor-office-temp
     ```
 
 1. Install the dependencies.
+
     ```sh
     yarn
     ```
 
-1. Create a configuration file in the repository root folder called `config.json` or `config.json5`. See the [config schema](./configSchema.json5) for a full description of each config option.
+1. Create a configuration file in the repository root folder called `config.json` or `config.json5`.
+
     ```sh
     vim config.json5
     ```
@@ -80,6 +84,8 @@ The property names may be specified in camelCase (e.g. `ifttt.webhookKey`, `stay
 Config properties can be selectively overridden with command line arguments:
 
 ```sh
+yarn start --IFTTT.WEBHOOK_KEY=foobar --STAY_AWAKE
+# or
 yarn start --ifttt.webhookKey=foobar --stayAwake
 ```
 
@@ -112,5 +118,3 @@ Stop the program at any time by pressing <kbd>Ctrl</kbd><kbd>C</kbd> in the term
 If an error occurs, the program will print the error details and crash. It will attempt to turn off the heater before exiting.
 
 The program will automatically exit after `TIME.MAX_EXECUTION` and turn off the heater.
-
-**Note:** Long-running Node.js processes will not prevent your computer from sleeping. While your computer is asleep, temperature polling is paused. Depending on the duration of time elapsed since the process started, after waking the computer, the process may exit after the next polling interval and turn off the heater.
